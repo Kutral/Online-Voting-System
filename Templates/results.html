@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Election Results</h1>
+<div id="results-list"></div>
+<script>
+    const electionId = {{ election_id }};
+    fetch(`/api/elections/${electionId}/results`)
+        .then(response => response.json())
+        .then(data => {
+            const list = document.getElementById('results-list');
+            for (const [candidate, votes] of Object.entries(data)) {
+                const div = document.createElement('div');
+                div.innerHTML = `<p>${candidate}: ${votes} votes</p>`;
+                list.appendChild(div);
+            }
+        });
+</script>
+{% endblock %}

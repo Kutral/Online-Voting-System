@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Vote in Election</h1>
+<div id="candidates-list"></div>
+<script>
+    const electionId = {{ election_id }};
+    fetch(`/api/elections/${electionId}/candidates`)
+        .then(response => response.json())
+        .then(data => {
+            const list = document.getElementById('candidates-list');
+            data.forEach(candidate => {
+                const div = document.createElement('div');
+                div.innerHTML = `<input type="radio" name="candidate" value="${candidate.id}"> ${candidate.name}<br>`;
+                list.appendChild(div);
+            });
+            const button = document.createElement('button');
+            button.textContent = 'Vote';
+            button.onclick = () => {
+                const selected = document.querySelector('input[name="candidate"]:checked');
+                if (selected) {
+                    fetch('/api/vote', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            election_id: electionId,
+                            candidate_id: selected.value
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                    });
+                } else {
+                    alert('Please select a candidate');
+                }
+            };
+            list.appendChild(button);
+        });
+</script>
+{% endblock %}

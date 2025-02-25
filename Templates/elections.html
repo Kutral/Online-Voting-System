@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Elections</h1>
+<div id="elections-list"></div>
+<script>
+    fetch('/api/elections')
+        .then(response => response.json())
+        .then(data => {
+            const list = document.getElementById('elections-list');
+            data.forEach(election => {
+                const div = document.createElement('div');
+                div.innerHTML = `<h3>${election.name}</h3><p>Starts: ${election.start_time}, Ends: ${election.end_time}</p><a href="/vote/${election.id}" class="btn btn-primary">Vote</a>`;
+                list.appendChild(div);
+            });
+        });
+</script>
+{% endblock %}
