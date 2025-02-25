@@ -202,35 +202,4 @@ online_voting_system/
 ## Contributing
 Feel free to fork this repository, submit issues, or create pull requests to enhance the project.
 
-## License
-This project is licensed under the MIT License.
-```
 
----
-
-## Notes
-- **SQL Usage**: Confirmed with MySQL and SQLAlchemy ORM in the codebase.
-- **Admin Page**: Now fully functional with forms to create elections and add candidates.
-- **README**: Includes everything needed for GitHub—description, setup, and detailed AWS deployment steps.
-
-You can now upload this to GitHub by creating a `requirements.txt` file with:
-
-```plaintext
-flask
-flask-sqlalchemy
-flask-bcrypt
-flask-login
-pymysql
-gunicorn
-```
-
-Then, push to your repository:
-```bash
-git init
-git add .
-git commit -m "Initial commit of Online Voting System"
-git remote add origin https://github.com/<your-username>/online_voting_system.git
-git push -u origin main
-```
-
-Let me know if you need further adjustments!
