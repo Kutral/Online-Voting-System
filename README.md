@@ -1,9 +1,4 @@
 
-## `README.md` for GitHub
-
-Below is a comprehensive `README.md` file for your project, including a description and detailed AWS deployment instructions.
-
-```markdown
 # Online Voting System
 
 The Online Voting System is a secure, web-based application designed to facilitate digital elections. Users can register, log in, vote in active elections, and view results, while administrators can manage elections and candidates. The application leverages modern web technologies and cloud infrastructure for scalability and reliability.
