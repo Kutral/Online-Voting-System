@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Admin Dashboard</h1>
+
+<h2>Create Election</h2>
+<form id="election-form">
+    <div class="form-group">
+        <label for="election-name">Election Name</label>
+        <input type="text" class="form-control" id="election-name" required>
+    </div>
+    <div class="form-group">
+        <label for="start-time">Start Time (ISO Format, e.g., 2025-03-01T10:00:00Z)</label>
+        <input type="text" class="form-control" id="start-time" required>
+    </div>
+    <div class="form-group">
+        <label for="end-time">End Time (ISO Format, e.g., 2025-03-01T18:00:00Z)</label>
+        <input type="text" class="form-control" id="end-time" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Create Election</button>
+</form>
+
+<h2>Add Candidate</h2>
+<form id="candidate-form">
+    <div class="form-group">
+        <label for="election-id">Election ID</label>
+        <input type="number" class="form-control" id="election-id" required>
+    </div>
+    <div class="form-group">
+        <label for="candidate-name">Candidate Name</label>
+        <input type="text" class="form-control" id="candidate-name" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Candidate</button>
+</form>
+
+<script>
+    document.getElementById('election-form').onsubmit = function(e) {
+        e.preventDefault();
+        const name = document.getElementById('election-name').value;
+        const startTime = document.getElementById('start-time').value;
+        const endTime = document.getElementById('end-time').value;
+        fetch('/api/elections', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                start_time: startTime,
+                end_time: endTime
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            alert(data.message);
+            if (data.id) {
+                console.log('Election ID:', data.id);
+            }
+        });
+    };
+
+    document.getElementById('candidate-form').onsubmit = function(e) {
+        e.preventDefault();
+        const electionId = document.getElementById('election-id').value;
+        const name = document.getElementById('candidate-name').value;
+        fetch(`/api/elections/${electionId}/candidates`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name
+            })
+        })
+        .then(response => response.json())
+        .then(data => alert(data.message));
+    };
+</script>
+{% endblock %}
