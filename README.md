@@ -1,205 +1,126 @@
+# 🗳️ ElectionPal - Online Voting System
 
-# Online Voting System(ElectionPal)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
+[![Maven](https://img.shields.io/badge/Maven-3.9-blue.svg)](https://maven.apache.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Active-brightgreen.svg)]()
 
-The Online Voting System is a secure, web-based application designed to facilitate digital elections. Users can register, log in, vote in active elections, and view results, while administrators can manage elections and candidates. The application leverages modern web technologies and cloud infrastructure for scalability and reliability.
+**ElectionPal** is a secure, modern, and scalable online voting platform engineered with pure Java architectures. It transitions away from heavy frameworks to provide a high-performance, lightweight REST API backed by robust MySQL persistence.
 
-## Features
-- **User Authentication**: Secure registration and login with password hashing.
-- **Voting**: Users can vote in elections during active periods, with one vote per election enforced.
-- **Admin Interface**: Admins can create elections and add candidates.
-- **Results**: Viewable post-election with candidate vote counts.
-- **Deployment**: Hosted on AWS for scalability and security.
+---
 
-## Tech Stack
-- **Frontend**: HTML5, CSS (Bootstrap), JavaScript (Fetch API)
-- **Backend**: Python (Flask framework)
-- **Database**: MySQL (via SQLAlchemy)
-- **Deployment**: AWS (EC2 for application, RDS for database)
-- **Tools**: Gunicorn (WSGI server), Nginx (reverse proxy), Let's Encrypt (HTTPS)
+## 🚀 Key Features
 
-## Project Structure
+*   **🔐 Secure Authentication**: Robust user management system using **BCrypt** hashing for industry-standard password security.
+*   **🗳️ Voting Engine**: Real-time voting capability with strict one-person-one-vote enforcement.
+*   **📊 Live Results**: Instantaneous vote aggregation and result visualization powered by optimized SQL queries.
+*   **⚡ RESTful API**: A clean, JSON-based API architecture decoupling the backend from the frontend.
+*   **📱 Responsive Frontend**: A lightweight Single Page Application (SPA) built with Bootstrap 4 and Vanilla JS for a seamless user experience.
+*   **👨‍💼 Admin Dashboard**: comprehensive tools for election commissioners to manage elections and candidates.
+
+---
+
+## 🛠️ Technology Stack
+
+| Component | Technology | Description |
+|-----------|------------|-------------|
+| **Backend** | Java 21 | Core logic using Jakarta EE Servlet API 6.0 |
+| **Database** | MySQL 8.0 | Relational data persistence |
+| **Data Access** | JDBC + HikariCP | High-performance database connection pooling |
+| **Build Tool** | Maven | Dependency management and build automation |
+| **Frontend** | HTML5 / JS | Client-side rendering with Fetch API |
+| **Styling** | Bootstrap 4 | Responsive grid layout and components |
+
+---
+
+## 🏗️ Architecture
+
+The project follows a clean **MVC (Model-View-Controller)** separation (with the View decoupled as a static client):
+
 ```
-online_voting_system/
-├── app.py              # Flask application with routes and logic
-├── templates/          # HTML templates
-│   ├── base.html
-│   ├── index.html
-│   ├── register.html
-│   ├── login.html
-│   ├── elections.html
-│   ├── vote.html
-│   ├── results.html
-│   └── admin.html
-├── static/             # Static files (CSS, JS) - optional for custom assets
-├── requirements.txt    # Python dependencies
-└── README.md           # This file
+src/
+└── main/
+    ├── java/com/voting/
+    │   ├── controller/   # 🎮 Servlets handling HTTP REST requests
+    │   ├── dao/          # 💾 Data Access Objects (JDBC implementation)
+    │   ├── model/        # 📦 POJO Data Models
+    │   ├── util/         # ⚙️ Utilities (DB Connection Pool)
+    │   └── filter/       # 🛡️ Security Filters (Auth, CORS)
+    └── webapp/
+        ├── js/           # ⚡ Client-side Application Logic
+        └── *.html        # 🖼️ Static Views
 ```
 
-## Prerequisites
-- Python 3.7+
-- MySQL (local or via Docker)
-- AWS account
-- Git
+---
 
-## Local Setup
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/<your-username>/online_voting_system.git
-   cd online_voting_system
-   ```
+## 🔌 API Documentation
 
-2. **Set Up Virtual Environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   # or
-   venv\Scripts\activate     # Windows
-   ```
+### Authentication
+*   `POST /api/auth/register` - Create a new user account.
+*   `POST /api/auth/login` - Authenticate and create a session.
+*   `GET  /api/auth/me` - Retrieve current session user details.
+*   `POST /api/auth/logout` - Invalidate the current session.
 
-3. **Install Dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Elections
+*   `GET  /api/elections` - List all active and past elections.
+*   `POST /api/elections` - (Admin) Create a new election.
+*   `GET  /api/elections/{id}/candidates` - Get candidates for a specific election.
+*   `POST /api/candidates` - (Admin) Add a candidate to an election.
 
-4. **Set Up MySQL Locally:**
-   - Option 1: Use Docker:
-     ```bash
-     docker run -d -p 3306:3306 --name mysql-db -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=voting_db mysql:5.7
-     ```
-   - Option 2: Install MySQL locally and create a database named `voting_db`.
+### Voting
+*   `POST /api/vote` - Cast a vote (Requires Auth).
+*   `GET  /api/results/{id}` - Get real-time results for an election.
 
-5. **Configure Environment Variables:**
-   Create a `.env` file (optional) or set variables directly:
-   ```bash
-   export SECRET_KEY='your_secret_key'
-   export DATABASE_URL='mysql+pymysql://root:password@localhost/voting_db'
-   ```
+---
 
-6. **Run the Application:**
-   ```bash
-   python app.py
-   ```
-   Access at `http://localhost:5000`.
+## 💻 Setup & Installation
 
-## AWS Deployment Instructions
+### Prerequisites
+*   Java Development Kit (JDK) 21 or higher
+*   Apache Maven
+*   MySQL Server
 
-### Step 1: Set Up EC2 Instance
-1. Launch an EC2 instance (e.g., Amazon Linux 2, t2.micro for free tier).
-2. SSH into the instance:
-   ```bash
-   ssh -i <your-key.pem> ec2-user@<ec2-public-ip>
-   ```
-3. Update and install dependencies:
-   ```bash
-   sudo yum update -y
-   sudo yum install python3 git -y
-   sudo yum install python3-pip -y
-   ```
+### 1. Database Configuration
+Create a database and initialize the schema:
 
-4. Clone the repository:
-   ```bash
-   git clone https://github.com/<your-username>/online_voting_system.git
-   cd online_voting_system
-   ```
+```sql
+CREATE DATABASE voting_db;
+USE voting_db;
+-- Execute the contents of src/main/resources/schema.sql
+```
 
-5. Install Python dependencies:
-   ```bash
-   pip3 install -r requirements.txt
-   ```
+### 2. Environment Variables
+Configure the application using environment variables (defaults shown):
 
-### Step 2: Set Up RDS (MySQL)
-1. Create a MySQL instance on AWS RDS (e.g., db.t2.micro for free tier).
-2. Note the endpoint, username, password, and database name.
-3. Update `app.py` configuration with environment variables on EC2:
-   ```bash
-   export DB_USER='admin'
-   export DB_PASSWORD='your_rds_password'
-   export DB_HOST='your-rds-endpoint'
-   export DB_NAME='voting_db'
-   ```
+```bash
+export DATABASE_URL='jdbc:mysql://localhost:3306/voting_db'
+export DB_USER='root'
+export DB_PASSWORD='password'
+```
 
-4. Configure EC2 security group to allow port 3306 inbound from the RDS instance.
+### 3. Build & Run
+Compile the application and package it into a WAR file:
 
-### Step 3: Run the Application
-1. Install Gunicorn:
-   ```bash
-   pip3 install gunicorn
-   ```
-2. Test the app:
-   ```bash
-   gunicorn -w 4 app:app
-   ```
+```bash
+mvn clean package
+```
 
-### Step 4: Configure Nginx
-1. Install Nginx:
-   ```bash
-   sudo yum install nginx -y
-   ```
-2. Create a configuration file at `/etc/nginx/conf.d/voting.conf`:
-   ```nginx
-   server {
-       listen 80;
-       server_name <your-ec2-public-ip-or-domain>;
+Deploy the `target/online-voting-system-1.0-SNAPSHOT.war` to your favorite Servlet Container (Tomcat, Jetty, WildFly).
 
-       location / {
-           proxy_pass http://127.0.0.1:8000;
-           proxy_set_header Host $host;
-           proxy_set_header X-Real-IP $remote_addr;
-       }
-   }
-   ```
-3. Restart Nginx:
-   ```bash
-   sudo systemctl restart nginx
-   sudo systemctl enable nginx
-   ```
+---
 
-### Step 5: Enable HTTPS with Let's Encrypt
-1. Install Certbot:
-   ```bash
-   sudo amazon-linux-extras install epel -y
-   sudo yum install certbot python2-certbot-nginx -y
-   ```
-2. Obtain SSL certificate:
-   ```bash
-   sudo certbot --nginx -d <your-domain>
-   ```
-   Follow prompts to configure HTTPS.
+## 🤝 Contributing
 
-### Step 6: Automate Startup
-1. Create a systemd service file at `/etc/systemd/system/voting.service`:
-   ```ini
-   [Unit]
-   Description=Gunicorn instance for Online Voting System
-   After=network.target
+Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
 
-   [Service]
-   User=ec2-user
-   Group=ec2-user
-   WorkingDirectory=/home/ec2-user/online_voting_system
-   ExecStart=/home/ec2-user/online_voting_system/venv/bin/gunicorn -w 4 app:app
-   Restart=always
+1.  Fork the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
 
-   [Install]
-   WantedBy=multi-user.target
-   ```
-2. Enable and start the service:
-   ```bash
-   sudo systemctl enable voting
-   sudo systemctl start voting
-   ```
+---
 
-### Step 7: Finalize Security
-- Update EC2 security group: Allow inbound traffic on ports 80 (HTTP) and 443 (HTTPS).
-- Update RDS security group: Allow inbound traffic on port 3306 from EC2 instance only.
-- Store sensitive data (e.g., `SECRET_KEY`, database credentials) in AWS Secrets Manager or environment variables.
+## 📄 License
 
-## Usage
-1. Access the app at `http://<ec2-public-ip>` or `https://<your-domain>` after HTTPS setup.
-2. Register and log in as a user to vote.
-3. Log in with an admin account (set `is_admin=True` in the database manually for a user) to manage elections.
-
-## Contributing
-Feel free to fork this repository, submit issues, or create pull requests to enhance the project.
-
-
+Distributed under the MIT License. See `LICENSE` for more information.

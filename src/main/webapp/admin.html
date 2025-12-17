@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Online Voting System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="nav-container"></div>
+    <div class="container mt-5">
+        <h2>Admin Dashboard</h2>
+
+        <div class="card mt-4">
+            <div class="card-header">Create Election</div>
+            <div class="card-body">
+                <form id="create-election-form">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Time</label>
+                        <input type="datetime-local" class="form-control" name="start_time" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Time</label>
+                        <input type="datetime-local" class="form-control" name="end_time" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+                <div id="election-msg" class="mt-2"></div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header">Add Candidate</div>
+            <div class="card-body">
+                <form id="add-candidate-form">
+                    <div class="form-group">
+                        <label>Election ID</label>
+                        <input type="number" class="form-control" name="election_id" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Candidate Name</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Add Candidate</button>
+                </form>
+                 <div id="candidate-msg" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+             const navContainer = document.getElementById('nav-container');
+             navContainer.innerHTML = `
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">Voting System</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto" id="nav-links"></ul>
+                </div>
+            </nav>`;
+            await checkAuth();
+            if (!currentUser || !currentUser.isAdmin) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            document.getElementById('create-election-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                // Basic ISO formatting for Java LocalDateTime
+                // datetime-local input gives 'YYYY-MM-DDTHH:MM' which works with ISO_LOCAL_DATE_TIME
+
+                const response = await fetch('/api/elections', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                document.getElementById('election-msg').innerText = result.message;
+            });
+
+             document.getElementById('add-candidate-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+                data.election_id = parseInt(data.election_id);
+
+                const response = await fetch('/api/candidates/0', { // ID in URL ignored by POST but needed for pattern matching? No, I defined wildcare /*
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                 const result = await response.json();
+                document.getElementById('candidate-msg').innerText = result.message;
+            });
+        });
+    </script>
+</body>
+</html>

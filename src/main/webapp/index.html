@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Voting System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="jumbotron text-center">
+        <h1>Welcome to ElectionPal</h1>
+        <p>A Secure Online Voting System</p>
+        <p>
+            <a href="/login.html" class="btn btn-primary">Login</a>
+            <a href="/register.html" class="btn btn-secondary">Register</a>
+        </p>
+    </div>
+    <script src="/js/app.js"></script>
+    <script>
+         document.addEventListener('DOMContentLoaded', async () => {
+             await checkAuth();
+             if (currentUser) {
+                 window.location.href = '/elections.html';
+             }
+         });
+    </script>
+</body>
+</html>

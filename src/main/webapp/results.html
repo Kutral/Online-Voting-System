@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Results - Online Voting System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div id="nav-container"></div>
+    <div class="container mt-5">
+        <h2>Election Results</h2>
+        <ul id="results-list" class="list-group"></ul>
+        <a href="/elections.html" class="btn btn-primary mt-3">Back to Elections</a>
+    </div>
+    <script src="/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+             const navContainer = document.getElementById('nav-container');
+             navContainer.innerHTML = `
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/">Voting System</a>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav mr-auto" id="nav-links"></ul>
+                </div>
+            </nav>`;
+            await checkAuth();
+
+            const params = new URLSearchParams(window.location.search);
+            const electionId = params.get('id');
+
+            const response = await fetch(`/api/results/${electionId}`);
+            if (response.ok) {
+                const results = await response.json();
+                const list = document.getElementById('results-list');
+                if (Object.keys(results).length === 0) {
+                     list.innerHTML = '<li class="list-group-item">No votes cast yet.</li>';
+                } else {
+                    for (const [name, count] of Object.entries(results)) {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                        const nameNode = document.createTextNode(name);
+                        li.appendChild(nameNode);
+
+                        const badgeSpan = document.createElement('span');
+                        badgeSpan.className = 'badge badge-primary badge-pill';
+                        badgeSpan.textContent = `${count} Votes`;
+                        li.appendChild(badgeSpan);
+
+                        list.appendChild(li);
+                    }
+                }
+            } else {
+                document.getElementById('results-list').innerText = 'Results not available yet or error loading.';
+            }
+        });
+    </script>
+</body>
+</html>
