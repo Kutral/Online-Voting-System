@@ -21,14 +21,33 @@ function updateNav() {
 
     nav.innerHTML = '';
     if (currentUser) {
-        nav.innerHTML += `<li class="nav-item"><a class="nav-link" href="/elections.html">Elections</a></li>`;
+        const electionsLi = document.createElement('li');
+        electionsLi.className = 'nav-item';
+        electionsLi.innerHTML = '<a class="nav-link" href="/elections.html">Elections</a>';
+        nav.appendChild(electionsLi);
+
         if (currentUser.isAdmin) {
-            nav.innerHTML += `<li class="nav-item"><a class="nav-link" href="/admin.html">Admin</a></li>`;
+             const adminLi = document.createElement('li');
+             adminLi.className = 'nav-item';
+             adminLi.innerHTML = '<a class="nav-link" href="/admin.html">Admin</a>';
+             nav.appendChild(adminLi);
         }
-        nav.innerHTML += `<li class="nav-item"><a class="nav-link" href="#" onclick="logout()">Logout</a></li>`;
+
+        const logoutLi = document.createElement('li');
+        logoutLi.className = 'nav-item';
+        logoutLi.innerHTML = '<a class="nav-link" href="#" onclick="logout()">Logout</a>';
+        nav.appendChild(logoutLi);
+
     } else {
-        nav.innerHTML += `<li class="nav-item"><a class="nav-link" href="/login.html">Login</a></li>`;
-        nav.innerHTML += `<li class="nav-item"><a class="nav-link" href="/register.html">Register</a></li>`;
+        const loginLi = document.createElement('li');
+        loginLi.className = 'nav-item';
+        loginLi.innerHTML = '<a class="nav-link" href="/login.html">Login</a>';
+        nav.appendChild(loginLi);
+
+        const registerLi = document.createElement('li');
+        registerLi.className = 'nav-item';
+        registerLi.innerHTML = '<a class="nav-link" href="/register.html">Register</a>';
+        nav.appendChild(registerLi);
     }
 }
 

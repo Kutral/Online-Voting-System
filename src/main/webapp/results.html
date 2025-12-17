@@ -36,10 +36,18 @@
                      list.innerHTML = '<li class="list-group-item">No votes cast yet.</li>';
                 } else {
                     for (const [name, count] of Object.entries(results)) {
-                        list.innerHTML += `<li class="list-group-item d-flex justify-content-between align-items-center">
-                            ${name}
-                            <span class="badge badge-primary badge-pill">${count} Votes</span>
-                        </li>`;
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                        const nameNode = document.createTextNode(name);
+                        li.appendChild(nameNode);
+
+                        const badgeSpan = document.createElement('span');
+                        badgeSpan.className = 'badge badge-primary badge-pill';
+                        badgeSpan.textContent = `${count} Votes`;
+                        li.appendChild(badgeSpan);
+
+                        list.appendChild(li);
                     }
                 }
             } else {

@@ -52,11 +52,18 @@
                    action = `<a href="/vote.html?id=${election.id}" class="btn btn-primary btn-sm">Vote</a>`;
                }
 
-               list.innerHTML += `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    ${election.name} (${start.toLocaleString()} - ${end.toLocaleString()})
-                    ${action}
-                </li>`;
+               const li = document.createElement('li');
+               li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+               const textNode = document.createTextNode(`${election.name} (${start.toLocaleString()} - ${end.toLocaleString()})`);
+               li.appendChild(textNode);
+
+               // Actions can contain HTML but are safe as they are hardcoded buttons/links
+               const actionSpan = document.createElement('span');
+               actionSpan.innerHTML = action;
+               li.appendChild(actionSpan);
+
+               list.appendChild(li);
            });
         });
     </script>

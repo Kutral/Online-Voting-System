@@ -12,7 +12,7 @@ import java.sql.Statement;
 public class UserDAO {
 
     public User findByEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM user WHERE email = ?";
+        String sql = "SELECT * FROM users WHERE email = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
@@ -25,7 +25,7 @@ public class UserDAO {
     }
 
     public User findById(int id) throws SQLException {
-        String sql = "SELECT * FROM user WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -38,7 +38,7 @@ public class UserDAO {
     }
 
     public void create(User user) throws SQLException {
-        String sql = "INSERT INTO user (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, password_hash, is_admin) VALUES (?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, user.getName());

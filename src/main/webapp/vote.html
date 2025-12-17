@@ -46,7 +46,10 @@
             const select = document.getElementById('candidate-select');
             select.innerHTML = '<option value="">Select a candidate</option>';
             candidates.forEach(c => {
-                select.innerHTML += `<option value="${c.id}">${c.name}</option>`;
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = c.name;
+                select.appendChild(option);
             });
 
             document.getElementById('vote-form').addEventListener('submit', async (e) => {
